@@ -20,6 +20,7 @@ func _ready():
 
 	print("Unique id: ", get_tree().get_network_unique_id())
 	
+# TEMP COMMENTED - TESTING PLAYER LOGIC
 #	for _i in range(20):
 #		var computer = preload('res://cpu.tscn').instance()
 #		var xlocation = (randi() % 20) * 32 + 16
@@ -27,25 +28,31 @@ func _ready():
 #		computer.position = Vector2(xlocation, ylocation)
 #		add_child(computer)
 
-#	$DebugLabel.add_color_override("font_color", Color(0, 0, 0, 1))
+# Position sync debug - LABEL CONFIG
+	$DebugLabel.add_color_override("font_color", Color(0, 0, 0, 1))
 	
 	
 func _input(event):
 	if event.is_action_pressed("click"):
 		if event.position.x > $Player1.position.x - 16 and event.position.x < $Player1.position.x + 16:
 			if event.position.y > $Player1.position.y - 16 and event.position.y < $Player1.position.y + 16:
-				$Player1/Sprite.set_texture(preload("res://found.png"))
+				rpc("set_found", $Player1/Sprite)
 		if event.position.x > $Player2.position.x - 16 and event.position.x < $Player2.position.x + 16:
 			if event.position.y > $Player2.position.y - 16 and event.position.y < $Player2.position.y + 16:
-				$Player2/Sprite.set_texture(preload("res://found.png"))
+				rpc("set_found", $Player2/Sprite)
 	else:
 		return
 
 
+puppetsync func set_found(playernode):
+	playernode.set_texture(preload("res://found.png"))
+
+
+# This button is currently hidden
 func _on_exit_game_pressed():
 	emit_signal("game_finished")
 
 
 # Position synchronization debugger
-#func _process(_delta):
-#	$DebugLabel.set_text(str($Player1.position) + str($Player2.position) + str(get_viewport().get_mouse_position()))
+func _process(_delta):
+	$DebugLabel.set_text(str($Player1/Sprite.texture) + str($Player2/Sprite.texture))

@@ -38,8 +38,7 @@ func _process(_delta):
 	if is_network_master():
 		# Using unreliable to make sure position is updated as fast
 		# as possible, even if one of the calls is dropped.
-		rpc_unreliable("set_pos", position)
-		rpc_unreliable("texture", $Sprite.texture)
+		rpc_unreliable("set_identity", position)
 	else:
 		if not _you_hidden:
 			_hide_you_label()
@@ -50,13 +49,11 @@ func _process(_delta):
 
 
 # Synchronize position to the other peers.
-puppet func set_pos(pos):
+# CURRENT BUG - Texture of other player disappears completely (no texture)
+# Though the texture-setting call goes through when testing with preload(square)
+puppet func set_identity(pos):
 	position = pos
-	
 
-puppet func texture(texture):
-	$Sprite.texture = texture
-	
 
 func _hide_you_label():
 	_you_hidden = true
