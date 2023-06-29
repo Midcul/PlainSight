@@ -80,9 +80,9 @@ size_flags_vertical = 2
 text = "Start Game"
 
 [node name="StatusOk" type="Label" parent="LobbyPanel"]
-margin_left = 10.0
+margin_left = 230.0
 margin_top = 90.0
-margin_right = 210.0
+margin_right = 430.0
 margin_bottom = 104.0
 size_flags_horizontal = 2
 size_flags_vertical = 0
@@ -90,9 +90,9 @@ custom_colors/font_color = Color( 0, 1, 0.015625, 1 )
 align = 1
 
 [node name="StatusFail" type="Label" parent="LobbyPanel"]
-margin_left = 10.0
+margin_left = 230.0
 margin_top = 90.0
-margin_right = 210.0
+margin_right = 430.0
 margin_bottom = 104.0
 size_flags_horizontal = 2
 size_flags_vertical = 0

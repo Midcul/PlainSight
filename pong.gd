@@ -28,6 +28,11 @@ func _ready():
 #		computer.position = Vector2(xlocation, ylocation)
 #		add_child(computer)
 
+# TODO: Implement pong for more than 2 players; change player instances from static to dynamic
+# have to retrieve list of peer ids/names from lobby.gd
+# TODO: Implement 4? 5? capture points, or go back and forth between 2?
+# TODO: Make it so that computers cannot move diagonally
+
 # Position sync debug - LABEL CONFIG
 	$DebugLabel.add_color_override("font_color", Color(0, 0, 0, 1))
 	
@@ -55,4 +60,4 @@ func _on_exit_game_pressed():
 
 # Position synchronization debugger
 func _process(_delta):
-	$DebugLabel.set_text(str($Player1/Sprite.texture) + str($Player2/Sprite.texture))
+	$DebugLabel.set_text(str(get_tree().get_network_unique_id()))

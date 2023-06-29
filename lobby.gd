@@ -12,8 +12,11 @@ onready var status_ok = $StatusOk
 onready var status_fail = $StatusFail
 onready var port_forward_label = $PortForward
 onready var find_public_ip_button = $FindPublicIP
+onready var player_tracker = $PlayerTracker
+onready var playername = $Name
 
 var peer = null
+var players = []
 
 
 func _ready():
@@ -27,14 +30,14 @@ func _ready():
 #### Network callbacks from SceneTree ####
 
 # Callback from SceneTree.
+# Players already in lobby - send nicknames to new players joining
 func _player_connected(_id):
-	# Someone connected, start the game!
-	var pong = load("res://pong.tscn").instance()
-	# Connect deferred so we can safely erase it from the callback.
-	pong.connect("game_finished", self, "_end_game", [], CONNECT_DEFERRED)
+	rpc("_add_self", playername.get_text())
 
-	get_tree().get_root().add_child(pong)
-	hide()
+
+remotesync func _add_self(nickname):
+	players.append(nickname)
+	rpc("_update_player_list")
 
 
 func _player_disconnected(_id):
@@ -45,8 +48,9 @@ func _player_disconnected(_id):
 
 
 # Callback from SceneTree, only for clients (not server).
+# New player - see who else is in the lobby
 func _connected_ok():
-	pass # This function is not needed for this project.
+	_update_player_list()
 
 
 # Callback from SceneTree, only for clients (not server).
@@ -90,13 +94,15 @@ func _set_status(text, isok):
 func _on_host_pressed():
 	peer = NetworkedMultiplayerENet.new()
 	peer.set_compression_mode(NetworkedMultiplayerENet.COMPRESS_RANGE_CODER)
-	var err = peer.create_server(DEFAULT_PORT, 2) # Maximum of 1 peer, since it's a 2-player game.
+	var err = peer.create_server(DEFAULT_PORT, 4) # Maximum of 4 peers, to accomodate 5 players.
 	if err != OK:
 		# Is another server running?
 		_set_status("Can't host, address in use.",false)
 		return
 
 	get_tree().set_network_peer(peer)
+	
+	# Consider removing lines 104/105, so that typos can be corrected without locking the UI
 	host_button.set_disabled(true)
 	join_button.set_disabled(true)
 	_set_status("Waiting for player...", true)
@@ -104,6 +110,10 @@ func _on_host_pressed():
 	# Only show hosting instructions when relevant.
 	port_forward_label.visible = true
 	find_public_ip_button.visible = true
+	
+	# Begin player list with host name
+	players.append(playername.get_text())
+	_update_player_list()
 
 
 func _on_join_pressed():
@@ -118,6 +128,32 @@ func _on_join_pressed():
 	get_tree().set_network_peer(peer)
 
 	_set_status("Connecting...", true)
+	
+
+# Update list of players
+remote func _update_player_list():
+	player_tracker.text = "Players"
+	
+	# "Set" data type implementation. Prevent repetition of player names
+	var seen = []
+	for i in players:
+		if not seen.has(i):
+			player_tracker.text += "\n" + i
+			seen.append(i)
+	
+
+func _on_start_game_pressed():
+	rpc("_start_game")
+
+
+remotesync func _start_game():
+	var pong = load("res://pong.tscn").instance()
+	# Connect deferred so we can safely erase it from the callback.
+	pong.connect("game_finished", self, "_end_game", [], CONNECT_DEFERRED)
+
+	# Replace lobby scene with pong scene
+	get_tree().get_root().add_child(pong)
+	hide()
 
 
 func _on_find_public_ip_pressed():
