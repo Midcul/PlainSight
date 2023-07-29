@@ -1,5 +1,6 @@
 # PlainSight
 A simple multiplayer game. Complete your objective without getting caught!
+
 Topics - server/client connection with port-forwarding, multiplayer game design, object-oriented programming
 
 The application starts on a lobby screen. On different networks, the host/server should share their public ip; on the same network, their private ip. After pressing "Host Game", a connection can be made with another player via port-forwarding. The client should type in the appropriate ip address and press "Join Game". From there, either player can begin the game.
