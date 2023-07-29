@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://logic/pong.gd" type="Script" id=1]
+[ext_resource path="res://pillar.tscn" type="PackedScene" id=2]
 [ext_resource path="res://paddle.tscn" type="PackedScene" id=3]
 
 [node name="Pong" type="Node2D"]
@@ -39,7 +40,20 @@ margin_left = 190.0
 margin_top = 159.0
 margin_right = 459.0
 margin_bottom = 341.0
-text = "debug"
+
+[node name="Pillar" parent="." instance=ExtResource( 2 )]
+position = Vector2( 96, 320 )
+
+[node name="Pillar2" parent="." instance=ExtResource( 2 )]
+position = Vector2( 512, 384 )
+
+[node name="Pillar3" parent="." instance=ExtResource( 2 )]
+position = Vector2( 64, 416 )
+
+[node name="Pillar4" parent="." instance=ExtResource( 2 )]
+position = Vector2( 320, 96 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 
 [connection signal="pressed" from="ExitGame" to="." method="_on_exit_game_pressed"]
 
