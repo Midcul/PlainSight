@@ -10,5 +10,8 @@ When the game begins, there are 12 red squares (2 players and 10 computers) with
 
 Each player can attempt to reveal their opponent by clicking on them and immediately win the game, but a incorrect click results in an immediate loss. To avoid being found, one can disguise their movements with the randomized movement of the computers, effectively hiding in plain sight. 
 
+![Game screen](https://github.com/Midcul/PlainSight/blob/main/gamescreen.PNG)
+
 Language: GDScript 3.5
+
 Renderer: GLES 2
